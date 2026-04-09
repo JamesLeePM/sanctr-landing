@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanctr — AI-Assisted Appeal Letters for Orthopedic Practices</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0e0d0c; --bg2: #161412; --bg3: #1e1c1a;
+    --green: #1a9b84; --green-dark: #1a6b5a;
+    --text: #f5f2ee; --text-muted: #8a8078; --text-dim: #3a3530;
+    --amber: #d4a030; --border: #2a2520;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  .topbar { display: flex; align-items: center; justify-content:pace-between; padding: 20px 48px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 100; }
+  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.4em; color: var(--green); text-transform: uppercase; text-decoration: none; }
+  .nav-cta { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bg); background: var(--green); border: none; padding: 10px 24px; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+  .nav-cta:hover { background: #22c4a8; }
+  .hero { padding: 100px 48px 80px; max-width: 1100px; margin: 0 auto; }
+  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 32px; }
+  .hero-title { font-family: 'DM Serif Display', serif; font-size: clamp(52px, 8vw, 96px); line-height: 1.0; letter-spacing: -2px; color: var(--text); margin-bottom: 16px; }
+  .hero-title em { font-style: italic; color: var(--green); }
+  .hero-sub { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.5vw, 24px); color: var(--text-muted); font-style: italic; margin-bottom: 64px; max-width: 600px; line-height: 1.5; }
+  .stats { display: flex; gap: 0; border: 1px solid var(--border); margin-bottom: 80px; }
+  .stat { flex: 1; padding: 32px 36px; border-right: 1px solid var(--border); }
+  .stat:last-child { border-right: none; }
+  .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 12px; }
+  .stat-value { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--text); line-height: 1; }
+  .stat-value.green { color: var(--green); }
+  .stat-value.amber { color: var(--amber); }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 0 48px; }
+  .section { padding: 80px 48px; max-width: 1100px; margin: 0 auto; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--green); text-transform: uppercase; margin-bottom: 48px; }
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 80px; }
+  .step { background: var(--bg); padding: 40px 36px; }
+  .step-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 0.1em; margin-bottom: 20px; }
+  .step-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); margin-bottom: 12px; line-height: 1.2; }
+  .step-desc { font-family: 'Syne', sans-serif; font-size: 14px; color: var(--text-muted); line-height: 1.7; font-weight: 400; }
+  .for-whom { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
+  .for-card { background: var(--bg2); padding: 40px 36px; }
+  .for-role { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
+  .for-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); margin-bottom: 12px; }
+  .for-desc { font-family: 'Syne', sans-serif; font-size: 14px; color: var(--text-muted); line-height: 1.7; font-weight: 400; }
+  .form-section { padding: 80px 48px; background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .form-inner { max-width: 600px; margin: 0 auto; }
+  .form-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--green); text-transform: uppercase; margin-bottom: 24px; }
+  .form-title { font-family: 'DM Serif Display', serif; font-size: 42px; color: var(--text); line-height: 1.1; margin-bottom: 12px; letter-spacing: -1px; }
+  .form-sub { font-family: 'Syne', sans-serif; font-size: 15px; color: var(--text-muted); margin-bottom: 48px; line-height: 1.6; font-weight: 400; }
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+  .form-input { width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--text); font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 400; padding: 14px 18px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; border-radius: 0; }
+  .form-input:focus { border-color: var(--green); }
+  .form-input::placeholder { color: var(--text-dim); }
+  .form-submit { width: 100%; background: var(--green); color: var(--bg); border: none; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; padding: 18px; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+  .form-submit:hover { background: #22c4a8; }
+  .form-note { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 16px; text-align: center; letter-spacing: 0.05em; }
+  .success-msg { display: none; text-align: center; padding: 48px 0; }
+  .success-msg.visible { display: block; }
+  .success-title { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--green); margin-bottom: 12px; }
+  .success-sub { font-family: 'Syne', sans-serif; font-size: 15px; color: var(--text-muted); font-weight: 400; }
+  .footer { padding: 32px 48px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); }
+  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 0.4em; color: var(--green-dark); text-transform: uppercase; }
+  .footer-text { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); letter-spacing: 0.05em; }
+  @media (max-width: 768px) {
+    .topbar { padding: 16px 24px; }
+    .hero { padding: 60px 24px 48px; }
+    .stats { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .steps { grid-template-columns: 1fr; }
+    .for-whom { grid-template-columns: 1fr; }
+    .section { padding: 48px 24px; }
+    .form-section { padding: 48px 24px; }
+    .footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<nav class="topbar">
+  <a href="#" class="logo">Sanctr</a>
+  <a href="#early-access" class="nav-cta">Request access</a>
+</nav>
+<section class="hero">
+  <p class="hero-eyebrow">For orthopedic practices · Early access</p>
+  <h1 class="hero-title">Prior auth appeals.<br><em>Automated.</em></h1>
+  <p class="hero-sub">AI-assisted appeal letters for practice managers and billing teams who deal with payer denials every day.</p>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Letter generation</div><div class="stat-value green">&lt; 3 sec</div></div>
+    <div class="stat"><div class="stat-label">Built for</div><div class="stat-value">Orthopedics</div></div>
+    <div class="stat"><div class="stat-label">Status</div><div class="stat-value amber">Early access</div></div>
+    <div class="stat"><div class="stat-label">Infrastructure</div><div class="stat-value">HIPAA-eligible</div></div>
+  </div>
+</section>
+<hr class="divider">
+<section class="sectio">
+  <p class="section-label">How it works</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div class="step-title">Denial comes in</div><div class="step-desc">Enter the denial reason, CPT code, diagnosis, and payer. Takes less than a minute.</div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-title">Letter generates</div><div class="step-desc">AI writes a complete, clinically grounded appeal letter in under 3 seconds — formatted and ready to send.</div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-title">Edit, download, send</div><div class="step-desc">Review the letter, make any edits, download as PDF, and attach to your fax or email. Done.</div></div>
+  </div>
+  <p class="section-label">Built for</p>
+  <div class="for-whom">
+    <div class="for-card"><div class="for-role">Practice managers</div><diclass="for-title">Stop writing the same letter twice.</div><div class="for-desc">Every denied TKA, rotator cuff repair, or arthroscopy follows the same pattern. Sanctr generates the appeal so your team doesn't have to.</div></div>
+    <div class="for-card"><div class="for-role">Billing &amp; revenue cycle</div><div class="for-title">Fewer denials sitting on your desk.</div><div class="for-desc">Track denied authorizations, generate appeals in seconds, and keep your revenue cycle moving without chasing physicians for documentation.</div></div>
+  </div>
+</section>
+<section class="form-section" id="early-access">
+  <div class="form-inner">
+    <p class="form-eyebrow">Early access</p>
+    <h2 class="form-title">Request a demo.</h2>
+    <p class="form-sub">We're working with a small group of orthopedic practices to pilot Sanctr. If your team deals with prior auth denials — we'd love 20 minutes.</p>
+    <form id="accessForm">
+      <div class="form-group"><label class="form-label" for="name">Your name</label><iut class="form-input" type="text" id="name" name="name" placeholder="Jane Smith" required></div>
+      <div class="form-group"><label class="form-label" for="email">Work email</label><input class="form-input" type="email" id="email" name="email" placeholder="jane@orthopractice.com" required></div>
+      <div class="form-group"><label class="form-label" for="practice">Practice name</label><input class="form-input" type="text" id="practice" name="practice" placeholder="Frederick Orthopedic Associates" required></div>
+      <button class="form-submit" type="submit">Request early access →</button>
+      <p class="form-note">No spam. No sales calls without permission. Just a 20-minute conversation.</p>
+    </form>
+    <div class="success-msg" id="successMsg">
+      <div class="success-title">You're on the list.</div>
+      <p class="success-sub">We'll be in touch within 24 hours to schedule your demo.</p>
+    </div>
+  </div>
+</section>
+<footer class="footer">
+  <span class="footer-logo">Sanctr</span>
+  <span css="footer-text">HIPAA-eligible infrastructure · Early access 2026</span>
+</footer>
+<script>
+document.getElementById('accessForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const practice = document.getElementById('practice').value;
+  fetch('https://formspree.io/f/mwvwjvyk', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({ name, email, practice })
+  }).finally(() => {
+    document.getElementById('accessForm').style.display = 'none';
+    document.getElementById('successMsg').classList.add('visible');
+  });
+});
+</script>
+</body>
+</html>
