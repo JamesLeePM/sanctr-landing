@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sanctr — Prior Authorization Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f8f9fa;--bg2:#fff;--bg3:#f1f3f5;
+  --green:#1a9b84;--green-dk:#145f50;--green-lt:#e8f7f4;
+  --text:#1a1a2e;--muted:#6b7280;--dim:#9ca3af;
+  --amber:#d97706;--amber-lt:#fef3c7;
+  --red:#dc2626;--red-lt:#fef2f2;
+  --blue:#2563eb;--blue-lt:#eff6ff;
+  --border:#e5e7eb;--border2:#f3f4f6;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:0 4px 6px rgba(0,0,0,.07),0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg:0 10px 25px rgba(0,0,0,.1),0 4px 10px rgba(0,0,0,.06);
+}
+
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  position:fixed;left:0;top:0;bottom:0;width:220px;
+  background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:50;
+}
+.sidebar-logo{
+  padding:20px 20px 16px;
+  border-bottom:1px solid var(--border);
+}
+.logo-mark{
+  font-family:'Syne',sans-serif;font-weight:800;font-size:13px;
+  letter-spacing:.4em;color:var(--green);text-transform:uppercase;
+}
+.logo-sub{
+  font-family:'DM Mono',monospace;font-size:9px;
+  color:var(--dim);letter-spacing:.05em;margin-top:3px;
+}
+.sidebar-nav{padding:12px 0;flex:1}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 20px;font-size:13px;font-weight:600;
+  color:var(--muted);cursor:pointer;transition:all .15s;
+  border-left:3px solid transparent;
+}
+.nav-item:hover{background:var(--bg3);color:var(--text)}
+.nav-item.active{
+  color:var(--green);background:var(--green-lt);
+  border-left-color:var(--green);
+}
+.nav-icon{font-size:15px;width:18px;text-align:center}
+.sidebar-footer{
+  padding:16px 20px;border-top:1px solid var(--border);
+  font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);
+}
+
+/* ── MAIN ── */
+.main{margin-left:220px;min-height:100vh}
+.topbar{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:16px 32px;display:flex;align-items:center;
+  justify-content:space-between;position:sticky;top:0;z-index:40;
+}
+.page-title{font-size:16px;font-weight:700;color:var(--text)}
+.page-sub{font-family:'DM Mono',monospace;font-size:10px;color:var(--dim);margin-top:2px}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.badge-live{
+  display:flex;align-items:center;gap:6px;
+  font-family:'DM Mono',monospace;font-size:9px;
+  color:var(--green);background:var(--green-lt);
+  padding:5px 10px;border:1px solid rgba(26,155,132,.2);
+}
+.live-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.content{padding:28px 32px}
+
+/* ── STATS BAR ── */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:16px;margin-bottom:24px;
+}
+.stat-card{
+  background:var(--bg2);border:1px solid var(--border);
+  padding:20px 22px;box-shadow:var(--shadow);
+}
+.stat-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.05em;margin-bottom:8px}
+.stat-val{font-family:'DM Serif Display',serif;font-size:32px;color:var(--text);line-height:1}
+.stat-val.green{color:var(--green)}
+.stat-sub{font-size:11px;color:var(--dim);margin-top:4px}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 380px;gap:20px;margin-bottom:24px}
+
+/* ── TABLE CARD ── */
+.card{
+  background:var(--bg2);border:1px solid var(--border);
+  box-shadow:var(--shadow);
+}
+.card-header{
+  padding:16px 20px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-title{font-size:14px;font-weight:700;color:var(--text)}
+.card-count{
+  font-family:'DM Mono',monospace;font-size:10px;
+  color:var(--muted);background:var(--bg3);
+  padding:3px 8px;border:1px solid var(--border);
+}
+
+table{width:100%;border-collapse:collapse}
+th{
+  font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);padding:10px 16px;
+  text-align:left;background:var(--bg3);
+  border-bottom:1px solid var(--border);
+}
+td{
+  padding:12px 16px;border-bottom:1px solid var(--border2);
+  font-size:13px;color:var(--text);
+  transition:background .15s;
+}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg3)}
+tr{cursor:pointer}
+
+.patient-id{
+  font-family:'DM Mono',monospace;font-size:11px;
+  color:var(--muted);
+}
+.cpt{font-weight:700;color:var(--text)}
+.cpt-name{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* ── BADGES ── */
+.badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;font-family:'Syne',sans-serif;
+  font-size:11px;font-weight:600;border-radius:2px;
+}
+.badge-denied{background:var(--red-lt);color:var(--red);border:1px solid rgba(220,38,38,.15)}
+.badge-approved{background:var(--green-lt);color:var(--green);border:1px solid rgba(26,155,132,.15)}
+.badge-pended{background:var(--amber-lt);color:var(--amber);border:1px solid rgba(217,119,6,.15)}
+.badge-appealed{background:var(--blue-lt);color:var(--blue);border:1px solid rgba(37,99,235,.15)}
+
+.payer-logo{
+  font-family:'DM Mono',monospace;font-size:10px;
+  font-weight:700;color:var(--muted);
+}
+
+/* ── APPEAL PANEL ── */
+.appeal-list{padding:12px}
+.appeal-item{
+  border:1px solid var(--border);padding:14px 16px;
+  margin-bottom:8px;cursor:pointer;transition:all .15s;
+  background:var(--bg2);
+}
+.appeal-item:last-child{margin-bottom:0}
+.appeal-item:hover{border-color:var(--green);background:var(--green-lt)}
+.appeal-item.active{border-color:var(--green);background:var(--green-lt)}
+.appeal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.appeal-title{font-size:13px;font-weight:700;color:var(--text)}
+.appeal-words{font-family:'DM Mono',monospace;font-size:9px;color:var(--dim)}
+.appeal-meta{font-size:11px;color:var(--muted)}
+.appeal-status{
+  font-family:'DM Mono',monospace;font-size:9px;
+  color:var(--green);background:var(--green-lt);
+  padding:2px 6px;border:1px solid rgba(26,155,132,.2);
+}
+.view-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:600;
+  color:var(--muted);border:1px solid var(--border);
+  padding:5px 12px;background:var(--bg2);cursor:pointer;
+  transition:all .15s;margin-top:8px;
+}
+.view-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-lt)}
+
+/* ── GENERATE APPEAL ── */
+.generate-card{
+  background:var(--bg2);border:1px solid var(--border);
+  box-shadow:var(--shadow);margin-bottom:20px;
+}
+.generate-toggle{
+  padding:16px 20px;display:flex;align-items:center;
+  justify-content:space-between;cursor:pointer;
+  transition:background .15s;
+}
+.generate-toggle:hover{background:var(--bg3)}
+.generate-toggle-title{font-size:14px;font-weight:700;color:var(--text)}
+.toggle-icon{font-size:18px;color:var(--muted);transition:transform .2s}
+.generate-body{padding:0 20px 20px;display:none}
+.generate-body.open{display:block}
+
+.form-group{margin-bottom:14px}
+.form-label{
+  display:block;font-family:'DM Mono',monospace;font-size:9px;
+  letter-spacing:.12em;color:var(--muted);text-transform:uppercase;
+  margin-bottom:6px;
+}
+.form-input,.form-select{
+  width:100%;border:1px solid var(--border);background:var(--bg2);
+  color:var(--text);font-family:'Syne',sans-serif;font-size:13px;
+  padding:9px 12px;outline:none;border-radius:2px;
+  transition:border-color .2s;-webkit-appearance:none;
+}
+.form-input:focus,.form-select:focus{border-color:var(--green)}
+.form-textarea{
+  width:100%;border:1px solid var(--border);background:var(--bg2);
+  color:var(--text);font-family:'Syne',sans-serif;font-size:13px;
+  padding:9px 12px;outline:none;border-radius:2px;
+  min-height:70px;resize:vertical;transition:border-color .2s;
+}
+.form-textarea:focus{border-color:var(--green)}
+.hint{font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);margin-top:4px}
+.gen-btn{
+  width:100%;background:var(--green);color:#fff;
+  border:none;font-family:'Syne',sans-serif;font-size:12px;
+  font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  padding:12px;cursor:pointer;transition:background .2s;
+}
+.gen-btn:hover{background:var(--green-dk)}
+
+/* ── MODAL ── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.55);
+  z-index:200;display:none;align-items:center;justify-content:center;
+  padding:20px;backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex}
+.modal{
+  background:var(--bg2);border:1px solid var(--border);
+  width:100%;max-width:760px;max-height:88vh;
+  display:flex;flex-direction:column;box-shadow:var(--shadow-lg);
+}
+.modal-header{
+  padding:18px 24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;position:sticky;top:0;background:var(--bg2);z-index:1;
+}
+.modal-title-text{font-size:15px;font-weight:700;color:var(--text)}
+.modal-actions{display:flex;align-items:center;gap:8px}
+.modal-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Syne',sans-serif;font-size:11px;font-weight:600;
+  padding:7px 14px;border:1px solid var(--border);
+  background:var(--bg2);color:var(--muted);cursor:pointer;transition:all .15s;
+}
+.modal-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-lt)}
+.modal-btn.primary{background:var(--green);color:#fff;border-color:var(--green)}
+.modal-btn.primary:hover{background:var(--green-dk)}
+.modal-close{
+  background:none;border:none;font-size:20px;
+  color:var(--muted);cursor:pointer;padding:0 4px;
+  transition:color .15s;line-height:1;
+}
+.modal-close:hover{color:var(--text)}
+.modal-body{overflow-y:auto;padding:28px 32px;flex:1}
+.letter-content{
+  font-family:'Georgia',serif;font-size:13.5px;
+  line-height:1.8;color:#1a1a2e;max-width:640px;margin:0 auto;
+}
+.letter-content h1{font-size:15px;font-weight:700;margin:20px 0 6px;color:#1a1a2e}
+.letter-content h2{font-size:14px;font-weight:700;margin:18px 0 6px;color:#1a1a2e;text-transform:uppercase;letter-spacing:.05em}
+.letter-content h3{font-size:13px;font-weight:700;margin:14px 0 4px;color:#1a1a2e}
+.letter-content p{margin-bottom:12px}
+.letter-content hr{border:none;border-top:1px solid var(--border);margin:18px 0}
+.letter-content table{width:100%;border-collapse:collapse;margin:12px 0}
+.letter-content td,.letter-content th{border:1px solid var(--border);padding:8px 12px;font-size:12.5px}
+.letter-content th{background:var(--bg3);font-weight:700}
+.letter-content blockquote{
+  border-left:3px solid var(--border);padding-left:16px;
+  font-style:italic;color:var(--muted);margin:12px 0;
+}
+.letter-meta{
+  background:var(--bg3);border:1px solid var(--border);
+  padding:12px 16px;margin-bottom:20px;
+  display:flex;gap:24px;flex-wrap:wrap;
+}
+.letter-meta-item{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+.letter-meta-item strong{color:var(--text);display:block;margin-bottom:2px}
+
+/* ── GENERATING ── */
+.generating{
+  display:none;text-align:center;padding:32px;
+}
+.generating.show{display:block}
+.gen-spinner{
+  width:32px;height:32px;border:2px solid var(--border);
+  border-top-color:var(--green);border-radius:50%;
+  animation:spin .7s linear infinite;margin:0 auto 12px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.gen-text{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;right:24px;
+  background:var(--text);color:#fff;
+  padding:12px 18px;font-size:12px;font-weight:600;
+  box-shadow:var(--shadow-lg);z-index:500;
+  transform:translateY(80px);opacity:0;
+  transition:all .3s;
+}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){.two-col{grid-template-columns:1fr}}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.stats-bar{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Letter Modal -->
+<div class="modal-overlay" id="letterModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title-text" id="modalTitle">Appeal Letter</div>
+      <div class="modal-actions">
+        <button class="modal-btn" onclick="copyLetter()">📋 Copy</button>
+        <button class="modal-btn" onclick="downloadPDF()">⬇ PDF</button>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">Sanctr</div>
+    <div class="logo-sub">Prior Authorization Platform</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-item active"><span class="nav-icon">⚡</span>Dashboard</div>
+    <div class="nav-item"><span class="nav-icon">📋</span>PA Requests</div>
+    <div class="nav-item"><span class="nav-icon">✉️</span>Appeal Letters</div>
+    <div class="nav-item"><span class="nav-icon">📊</span>Reports</div>
+    <div class="nav-item"><span class="nav-icon">⚙️</span>Settings</div>
+  </nav>
+  <div class="sidebar-footer">
+    Epic FHIR · HIPAA-eligible<br>AWS us-east-1
+  </div>
+</aside>
+
+<!-- Main -->
+<main class="main">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Prior Authorization</div>
+      <div class="page-sub">Sanctr PA dashboard — Epic FHIR, payer decisions, and appeal letters.</div>
+    </div>
+    <div class="topbar-right">
+      <div class="badge-live"><span class="live-dot"></span>Live · Epic FHIR</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-label">Total PA Requests</div>
+        <div class="stat-val">18</div>
+        <div class="stat-sub">6 payers · 12 CPT codes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Appeals Generated</div>
+        <div class="stat-val green">7</div>
+        <div class="stat-sub">3 approved · 2 pending · 2 resubmitted</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Avg Response Time</div>
+        <div class="stat-val green">&lt; 3 sec</div>
+        <div class="stat-sub">vs. 19.5 min manual avg</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tests Passing</div>
+        <div class="stat-val">16/16</div>
+        <div class="stat-sub">All systems operational</div>
+      </div>
+    </div>
+
+    <!-- PA Table + Appeal Panel -->
+    <div class="two-col">
+      <!-- PA Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Prior Auth Requests</div>
+          <span class="card-count">18 requests</span>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>CPT Code</th>
+              <th>Payer</th>
+              <th>Status</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+          <tbody id="paTable"></tbody>
+        </table>
+      </div>
+
+      <!-- Appeal Letters -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Appeal Letters</div>
+          <span class="card-count">7 letters</span>
+        </div>
+        <div class="appeal-list" id="appealList"></div>
+      </div>
+    </div>
+
+    <!-- Generate Appeal -->
+    <div class="generate-card">
+      <div class="generate-toggle" onclick="toggleGenerate()">
+        <div class="generate-toggle-title">Generate Appeal Letter</div>
+        <span class="toggle-icon" id="toggleIcon">›</span>
+      </div>
+      <div class="generate-body" id="generateBody">
+        <div class="form-group">
+          <label class="form-label">Prior Auth Request</label>
+          <select class="form-select" id="paSelect">
+            <option value="">Select denied request...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Denial Reason Code</label>
+          <input class="form-input" type="text" id="denialCode" placeholder="DEN-001">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Denial Reason Text</label>
+          <textarea class="form-textarea" id="denialText" placeholder="Not medically necessary per payer clinical criteria"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">CPT Code</label>
+          <input class="form-input" type="text" id="cptCode" placeholder="27447">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Diagnosis Codes</label>
+          <input class="form-input" type="text" id="diagCodes" placeholder="M17.11, M17.12">
+          <div class="hint">Comma-separated ICD-10 codes.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Payer Name</label>
+          <input class="form-input" type="text" id="payerName" placeholder="UnitedHealthcare">
+        </div>
+        <div class="generating" id="generating">
+          <div class="gen-spinner"></div>
+          <div class="gen-text">Generating appeal letter...</div>
+        </div>
+        <button class="gen-btn" onclick="generateAppeal()">Generate Appeal Letter</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const PATIENTS = [
+  {id:'erXuFYUfucBZaryVksYEcMg3', name:'Camila Lopez', dob:'1987'},
+  {id:'Tbt3KuCY0B5PSrJvmVam5WQ3', name:'Marcus Williams', dob:'1964'},
+  {id:'eAB3mDIBi3W59LqWBKSPMWQ3', name:'Patricia Chen', dob:'1959'},
+  {id:'T1wI5bk8hGFued3vXwFOVlw3', name:'Robert Torres', dob:'1972'},
+  {id:'eq081-oxBoUOd3.S.rcQPRg3', name:'Sandra Mitchell', dob:'1955'},
+  {id:'WNmkb4H3sG.YEe8MGcwMUwB3', name:'James Patel', dob:'1968'},
+  {id:'Zcq.GjkAkdJFdMBZ.Eq6J7A3', name:'Dorothy Nguyen', dob:'1951'},
+  {id:'eQvyP.GG3TRkHHUMUr4RWVQ3', name:'Kenneth Adams', dob:'1975'},
+  {id:'3nXuT5c1wKHq.hXlb.PSNAQ3', name:'Beverly Jackson', dob:'1948'},
+];
+
+const PA_REQUESTS = [
+  // DENIED — prime appeal candidates
+  {id:1,  patient:0, cpt:'27447', cptName:'Total Knee Arthroplasty',      payer:'UnitedHealthcare',  status:'denied',   date:'2026-04-08', diagCode:'M17.11', diagName:'Primary osteoarthritis, right knee'},
+  {id:2,  patient:1, cpt:'22612', cptName:'Lumbar Fusion',                payer:'Aetna',             status:'denied',   date:'2026-04-07', diagCode:'M47.816',diagName:'Spondylosis w/ radiculopathy, lumbar'},
+  {id:3,  patient:2, cpt:'29827', cptName:'Rotator Cuff Repair',          payer:'BCBS',              status:'denied',   date:'2026-04-06', diagCode:'M75.121',diagName:'Complete rotator cuff tear, right'},
+  {id:4,  patient:3, cpt:'27130', cptName:'Total Hip Arthroplasty',       payer:'Cigna',             status:'denied',   date:'2026-04-05', diagCode:'M16.11', diagName:'Primary osteoarthritis, right hip'},
+  {id:5,  patient:4, cpt:'29881', cptName:'Knee Meniscectomy',            payer:'Humana',            status:'denied',   date:'2026-04-04', diagCode:'M23.201',diagName:'Derangement of medial meniscus'},
+  {id:6,  patient:5, cpt:'23472', cptName:'Total Shoulder Arthroplasty',  payer:'Medicare Advantage',status:'denied',   date:'2026-04-03', diagCode:'M19.011',diagName:'Primary osteoarthritis, right shoulder'},
+  {id:7,  patient:6, cpt:'22551', cptName:'ACDF — C4-C5',                payer:'UnitedHealthcare',  status:'denied',   date:'2026-04-02', diagCode:'M50.122',diagName:'Cervical disc degeneration, mid-cervical'},
+  // APPEALED
+  {id:8,  patient:7, cpt:'27447', cptName:'Total Knee Arthroplasty',      payer:'Aetna',             status:'appealed', date:'2026-04-01', diagCode:'M17.12', diagName:'Primary osteoarthritis, left knee'},
+  {id:9,  patient:8, cpt:'29807', cptName:'SLAP Repair',                  payer:'BCBS',              status:'appealed', date:'2026-03-31', diagCode:'S43.431',diagName:'SLAP lesion of right shoulder'},
+  // PENDED
+  {id:10, patient:0, cpt:'64483', cptName:'Epidural Steroid Injection',   payer:'Cigna',             status:'pended',   date:'2026-04-08', diagCode:'M54.4',  diagName:'Lumbago with sciatica'},
+  {id:11, patient:1, cpt:'29823', cptName:'Shoulder Arthroscopy',         payer:'Humana',            status:'pended',   date:'2026-04-07', diagCode:'M75.51', diagName:'Bursitis of right shoulder'},
+  {id:12, patient:2, cpt:'27570', cptName:'Knee Manipulation',            payer:'Medicare Advantage',status:'pended',   date:'2026-04-06', diagCode:'M89.861',diagName:'Other specified disorders of bone, tibia'},
+  // APPROVED
+  {id:13, patient:3, cpt:'29880', cptName:'Knee Arthroscopy w/ Meniscectomy',payer:'UnitedHealthcare',status:'approved', date:'2026-04-05', diagCode:'M23.202',diagName:'Derangement of lateral meniscus'},
+  {id:14, patient:4, cpt:'23412', cptName:'Rotator Cuff Repair, Chronic', payer:'Aetna',            status:'approved', date:'2026-04-04', diagCode:'M75.122',diagName:'Complete rotator cuff tear, left'},
+  {id:15, patient:5, cpt:'27245', cptName:'ORIF — Femoral Fracture',      payer:'BCBS',             status:'approved', date:'2026-04-03', diagCode:'S72.001',diagName:'Fracture of unspecified part of neck of femur'},
+  {id:16, patient:6, cpt:'29826', cptName:'Shoulder Decompression',       payer:'Cigna',            status:'approved', date:'2026-04-02', diagCode:'M75.111',diagName:'Rotator cuff syndrome, right shoulder'},
+  {id:17, patient:7, cpt:'27702', cptName:'Ankle Arthroplasty',           payer:'Humana',           status:'approved', date:'2026-04-01', diagCode:'M19.071',diagName:'Primary osteoarthritis, right ankle'},
+  {id:18, patient:8, cpt:'22630', cptName:'Lumbar Interbody Fusion',      payer:'Medicare Advantage',status:'approved', date:'2026-03-31', diagCode:'M51.16', diagName:'Intervertebral disc degeneration, lumbar'},
+];
+
+const APPEAL_LETTERS = [
+  {id:1, paId:1,  title:'27447 · UnitedHealthcare',  words:612, date:'2026-04-08 14:23', status:'ready'},
+  {id:2, paId:2,  title:'22612 · Aetna',             words:589, date:'2026-04-07 16:45', status:'ready'},
+  {id:3, paId:3,  title:'29827 · BCBS',              words:543, date:'2026-04-06 11:12', status:'ready'},
+  {id:4, paId:4,  title:'27130 · Cigna',             words:631, date:'2026-04-05 09:34', status:'ready'},
+  {id:5, paId:5,  title:'29881 · Humana',            words:498, date:'2026-04-04 15:08', status:'ready'},
+  {id:6, paId:6,  title:'23472 · Medicare Advantage',words:657, date:'2026-04-03 13:55', status:'ready'},
+  {id:7, paId:8,  title:'27447 · Aetna (Resubmit)',  words:574, date:'2026-04-01 10:20', status:'sent'},
+];
+
+// ── LETTER TEMPLATES ──────────────────────────────────────────────
+function getLetter(paId) {
+  const pa = PA_REQUESTS.find(p => p.id === paId);
+  const pt = PATIENTS[pa.patient];
+  const payer = pa.payer;
+  const cpt   = pa.cpt;
+  const cptN  = pa.cptName;
+  const diag  = pa.diagCode;
+  const diagN = pa.diagName;
+
+  const payerAddress = {
+    'UnitedHealthcare': 'UnitedHealthcare Prior Authorization Appeals Department',
+    'Aetna': 'Aetna Medical Management Appeals Unit',
+    'BCBS': 'Blue Cross Blue Shield Clinical Appeals Department',
+    'Cigna': 'Cigna Healthcare Prior Authorization Review Team',
+    'Humana': 'Humana Appeals and Grievances Department',
+    'Medicare Advantage': 'Medicare Advantage Medical Review Appeals Unit',
+  }[payer] || `${payer} Prior Authorization Appeals Department`;
+
+  const guidelines = {
+    '27447': `The <strong>AAOS Clinical Practice Guideline for the Management of Osteoarthritis of the Knee</strong> (3rd edition) supports surgical intervention, including TKA, when patients demonstrate radiographic evidence of joint space narrowing, persistent functional limitation, and inadequate response to non-operative treatment modalities (evidence grade: Strong).<br><br>
+    <strong>CMS Local Coverage Determination (LCD) L38779</strong> recognizes TKA as medically necessary when supported by documented failure of conservative care including physical therapy (minimum 6 weeks), NSAIDs, and/or corticosteroid injections, functional impairment (KOOS or WOMAC scores), and confirmatory weight-bearing radiographs demonstrating joint space narrowing.<br><br>
+    <strong>${payer}'s own Medical Policy (Orthopedic Surgery — Knee Arthroplasty)</strong> acknowledges TKA as appropriate when clinical and radiographic criteria are met, including documented conservative treatment failure.`,
+
+    '22612': `The <strong>North American Spine Society (NASS) Evidence-Based Clinical Guidelines</strong> support lumbar fusion for patients with symptomatic lumbar stenosis or spondylolisthesis who have failed a minimum of 3 months of non-operative care, including physical therapy and epidural steroid injections.<br><br>
+    <strong>CMS LCD L38608</strong> (Spinal Fusion) recognizes surgical intervention as medically necessary for radiculopathy with confirmed disc herniation or foraminal stenosis on advanced imaging when conservative management has been exhausted.<br><br>
+    The patient's MRI findings of <strong>severe foraminal stenosis at L4-L5</strong> with concordant radicular symptoms, unresponsive to 4 months of conservative care, meet all published clinical thresholds.`,
+
+    '29827': `The <strong>American Shoulder and Elbow Surgeons (ASES) Clinical Practice Guidelines</strong> support surgical repair of full-thickness rotator cuff tears when conservative management (physical therapy, NSAIDs, corticosteroid injections) has failed over 6–12 weeks and the tear is structurally reparable on MRI.<br><br>
+    <strong>CMS LCD L34555</strong> (Rotator Cuff Repair) covers arthroscopic rotator cuff repair for documented full-thickness tears confirmed by MRI with clinical correlation, following failure of non-operative treatment.<br><br>
+    Delay of surgical repair in full-thickness tears is associated with increased tear size, fatty infiltration, and decreased functional outcomes (Lapner et al., JBJS 2012).`,
+
+    '27130': `The <strong>AAOS Clinical Practice Guideline for the Management of Osteoarthritis of the Hip</strong> supports total hip arthroplasty when patients demonstrate radiographic evidence of hip joint space narrowing with corresponding functional limitation, having failed appropriate non-operative management.<br><br>
+    <strong>CMS LCD L38779</strong> recognizes THA as medically necessary when radiographic confirmation of advanced hip arthritis is present alongside documented failure of conservative care including NSAIDs, physical therapy, and intra-articular injections.<br><br>
+    The patient's Harris Hip Score of 42 (severe functional impairment) and AP radiographs demonstrating complete joint space obliteration at the right hip are consistent with published surgical thresholds.`,
+
+    '29881': `The <strong>AAOS Clinical Practice Guideline for the Diagnosis and Treatment of Osteoarthritis of the Knee</strong> and the <strong>International Society of Arthroscopy, Knee Surgery and Orthopaedic Sports Medicine (ISAKOS)</strong> guidelines support meniscal surgery when mechanical symptoms (locking, catching) are present with MRI-confirmed meniscal tear and failure of conservative management.<br><br>
+    <strong>CMS LCD L35130</strong> covers arthroscopic meniscectomy for symptomatic meniscal tears with documented mechanical symptoms unresponsive to conservative care.<br><br>
+    The patient's mechanical symptoms, positive McMurray test, and MRI-confirmed bucket-handle tear of the medial meniscus constitute clear surgical indication.`,
+
+    '23472': `The <strong>American Shoulder and Elbow Surgeons (ASES) consensus statement on shoulder arthroplasty</strong> supports total shoulder replacement for end-stage glenohumeral arthritis with pain and functional limitation unresponsive to non-operative management.<br><br>
+    <strong>CMS LCD L34031</strong> (Shoulder Arthroplasty) covers total shoulder arthroplasty for advanced glenohumeral osteoarthritis confirmed radiographically with documented failure of conservative care including NSAIDs, physical therapy, and intra-articular corticosteroid injections.<br><br>
+    The patient's radiographic findings demonstrate complete loss of glenohumeral joint space with subchondral sclerosis and osteophyte formation consistent with end-stage arthritis.`,
+
+    '22551': `The <strong>NASS Evidence-Based Clinical Guidelines for the Diagnosis and Treatment of Cervical Radiculopathy</strong> support anterior cervical discectomy and fusion (ACDF) for patients with cervical radiculopathy caused by disc herniation or foraminal stenosis who have failed 6 weeks of conservative management, including physical therapy, NSAIDs, and cervical epidural steroid injections.<br><br>
+    <strong>CMS LCD L34076</strong> (Cervical Spinal Fusion) covers ACDF for documented cervical radiculopathy with MRI confirmation of disc herniation or stenosis causing nerve root compression, following failure of non-operative treatment.<br><br>
+    The patient's MRI demonstrates severe foraminal stenosis at C4-C5 with nerve root compression, consistent with clinical presentation of intractable right upper extremity radiculopathy.`,
+  };
+
+  const clinicalGuideline = guidelines[cpt] || `The applicable clinical practice guidelines and payer medical policies support surgical intervention for ${diagN} when conservative management has been exhausted and functional impairment is documented.`;
+
+  return `
+<div class="letter-meta">
+  <div class="letter-meta-item"><strong>Patient DOB</strong>${pt.dob}</div>
+  <div class="letter-meta-item"><strong>Procedure</strong>CPT ${cpt} — ${cptN}</div>
+  <div class="letter-meta-item"><strong>Payer</strong>${payer}</div>
+  <div class="letter-meta-item"><strong>Diagnosis</strong>${diag}</div>
+</div>
+<div class="letter-content">
+<hr>
+<h1>PRIOR AUTHORIZATION APPEAL LETTER</h1>
+<p><strong>Via Secure Fax / Certified Mail</strong></p>
+<hr>
+<p><strong>Date:</strong> <em>${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</em><br>
+<strong>To:</strong> ${payerAddress}<br>
+<strong>Re:</strong> Appeal of Medical Necessity Denial — CPT ${cpt} (${cptName})</p>
+<hr>
+<h2>Section 1: Patient and Procedure Information</h2>
+<table>
+<tr><th>Field</th><th>Detail</th></tr>
+<tr><td><strong>Patient Date of Birth (Year)</strong></td><td>${pt.dob}</td></tr>
+<tr><td><strong>Primary Diagnosis Code</strong></td><td>${diag} — ${diagN}</td></tr>
+<tr><td><strong>Requested Procedure</strong></td><td>CPT ${cpt} — ${cptN}</td></tr>
+<tr><td><strong>Original Auth Request Date</strong></td><td>${pa.date}</td></tr>
+<tr><td><strong>Payer</strong></td><td>${payer}</td></tr>
+<tr><td><strong>Denial Basis</strong></td><td>Not medically necessary per payer clinical criteria</td></tr>
+</table>
+<hr>
+<h2>Section 2: Reason for Appeal</h2>
+<p>We are formally appealing ${payer}'s denial of prior authorization for CPT ${cpt} (${cptN}) for the above-referenced patient. The denial was issued on the basis that the requested procedure does not meet the payer's clinical criteria for medical necessity. We respectfully disagree with this determination and submit the following clinical and evidence-based justification in support of approval.</p>
+<blockquote>
+<strong>Note:</strong> Specific clinical documentation, including office visit notes, imaging reports, physical therapy records, and conservative treatment history, is marked as pending attachment. All supporting records will be submitted concurrently with this appeal letter.
+</blockquote>
+<hr>
+<h2>Section 3: Clinical Justification</h2>
+<h3>Diagnosis and Clinical Burden</h3>
+<p>The patient carries a confirmed diagnosis of <strong>${diagN} (${diag})</strong>. ${cptN} is a well-established, guideline-supported intervention for patients who have failed conservative management and demonstrate progressive functional limitation.</p>
+<h3>Applicable Clinical Guidelines</h3>
+<p>${clinicalGuideline}</p>
+<h3>Conservative Treatment History</h3>
+<p>The patient has undergone an extensive course of conservative management, including but not limited to: physical therapy (minimum 6–8 weeks), non-steroidal anti-inflammatory medications, intra-articular corticosteroid injections, activity modification, and assistive devices as appropriate. Despite these measures, the patient continues to experience significant functional impairment and pain that substantially limits activities of daily living.</p>
+<p><strong>Supporting documentation to be attached includes:</strong> imaging studies confirming structural pathology, physician clinical notes documenting functional limitation and pain scores, conservative treatment records with outcomes, and functional assessment documentation.</p>
+<hr>
+<h2>Section 4: Request for Expedited Review</h2>
+<p>Given the patient's documented functional impairment and the time-sensitive nature of surgical scheduling, we respectfully request <strong>expedited review</strong> of this appeal in accordance with applicable state and federal timelines. We are available to provide peer-to-peer consultation at the payer's earliest convenience.</p>
+<p>Please direct all correspondence to:</p>
+<p><strong>Treating Physician / Practice Name:</strong> <em>(Insert)</em><br>
+<strong>Phone:</strong> <em>(Insert)</em><br>
+<strong>Fax:</strong> <em>(Insert)</em><br>
+<strong>NPI:</strong> <em>(Insert)</em></p>
+<p>We appreciate your prompt attention to this matter and remain committed to resolving this appeal in the best interest of the patient.</p>
+<p>Respectfully submitted,</p>
+<p><em>(Treating Physician Signature)</em><br>
+<em>(Printed Name, Credentials)</em><br>
+<em>(Practice Name)</em><br>
+<em>(Date)</em></p>
+<hr>
+<p><em>Enclosures: Clinical documentation to be attached separately.</em></p>
+</div>`;
+}
+
+// ── RENDER TABLE ──────────────────────────────────────────────────
+function statusBadge(s) {
+  const map = {
+    denied:   '<span class="badge badge-denied">● Denied</span>',
+    approved: '<span class="badge badge-approved">✓ Approved</span>',
+    pended:   '<span class="badge badge-pended">◑ Pended</span>',
+    appealed: '<span class="badge badge-appealed">↺ Appealed</span>',
+  };
+  return map[s] || s;
+}
+
+function formatDate(d) {
+  return new Date(d).toLocaleDateString('en-US',{month:'numeric',day:'numeric',year:'numeric'});
+}
+
+function renderTable() {
+  const tbody = document.getElementById('paTable');
+  tbody.innerHTML = PA_REQUESTS.map(pa => {
+    const pt = PATIENTS[pa.patient];
+    const shortId = pa.id.toString().padStart(3,'0');
+    return `<tr onclick="rowClick(${pa.id})">
+      <td><div class="patient-id">${pt.name}</div><div style="font-size:10px;color:var(--dim);margin-top:2px">PA-${shortId}</div></td>
+      <td><div class="cpt">${pa.cpt}</div><div class="cpt-name">${pa.cptName}</div></td>
+      <td><div class="payer-logo">${pa.payer}</div></td>
+      <td>${statusBadge(pa.status)}</td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${formatDate(pa.date)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAppealList() {
+  const list = document.getElementById('appealList');
+  list.innerHTML = APPEAL_LETTERS.map(al => {
+    const pa = PA_REQUESTS.find(p => p.id === al.paId);
+    const statusCls = al.status === 'sent' ? 'badge badge-appealed' : 'badge badge-approved';
+    const statusText = al.status === 'sent' ? 'Sent' : 'Ready';
+    return `<div class="appeal-item" onclick="viewLetter(${al.paId}, '${al.title}')">
+      <div class="appeal-head">
+        <div class="appeal-title">${al.title}</div>
+        <span class="${statusCls}" style="font-size:9px">${statusText}</span>
+      </div>
+      <div class="appeal-meta">${al.words} words · ${al.date}</div>
+      <button class="view-btn" onclick="event.stopPropagation();viewLetter(${al.paId},'${al.title}')">View Letter</button>
+    </div>`;
+  }).join('');
+}
+
+function populatePASelect() {
+  const sel = document.getElementById('paSelect');
+  PA_REQUESTS.filter(p => p.status === 'denied' || p.status === 'pended').forEach(pa => {
+    const pt = PATIENTS[pa.patient];
+    const opt = document.createElement('option');
+    opt.value = pa.id;
+    opt.textContent = `${pt.name} — CPT ${pa.cpt} — ${pa.payer}`;
+    sel.appendChild(opt);
+  });
+  sel.onchange = function() {
+    const pa = PA_REQUESTS.find(p => p.id == this.value);
+    if (!pa) return;
+    document.getElementById('cptCode').value = pa.cpt;
+    document.getElementById('diagCodes').value = pa.diagCode;
+    document.getElementById('payerName').value = pa.payer;
+    document.getElementById('denialCode').value = 'DEN-001';
+    document.getElementById('denialText').value = 'Not medically necessary per payer clinical criteria';
+  };
+}
+
+// ── INTERACTIONS ──────────────────────────────────────────────────
+function rowClick(paId) {
+  const pa = PA_REQUESTS.find(p => p.id === paId);
+  if (pa.status === 'denied') {
+    // Auto-fill generate form
+    document.getElementById('paSelect').value = paId;
+    document.getElementById('cptCode').value = pa.cpt;
+    document.getElementById('diagCodes').value = pa.diagCode;
+    document.getElementById('payerName').value = pa.payer;
+    document.getElementById('denialCode').value = 'DEN-001';
+    document.getElementById('denialText').value = 'Not medically necessary per payer clinical criteria';
+    if (!document.getElementById('generateBody').classList.contains('open')) toggleGenerate();
+    document.getElementById('generateBody').scrollIntoView({behavior:'smooth', block:'start'});
+    showToast('Denial loaded — ready to generate appeal');
+  }
+  const al = APPEAL_LETTERS.find(a => a.paId === paId);
+  if (al) viewLetter(paId, al.title);
+}
+
+function viewLetter(paId, title) {
+  document.getElementById('modalTitle').textContent = `Appeal — ${title || PA_REQUESTS.find(p=>p.id===paId)?.cpt + ' · ' + PA_REQUESTS.find(p=>p.id===paId)?.payer}`;
+  document.getElementById('modalBody').innerHTML = getLetter(paId);
+  document.getElementById('letterModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('letterModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toggleGenerate() {
+  const body = document.getElementById('generateBody');
+  const icon = document.getElementById('toggleIcon');
+  body.classList.toggle('open');
+  icon.style.transform = body.classList.contains('open') ? 'rotate(90deg)' : '';
+}
+
+function generateAppeal() {
+  const paId = document.getElementById('paSelect').value;
+  const payer = document.getElementById('payerName').value;
+  const cpt   = document.getElementById('cptCode').value;
+  if (!cpt || !payer) { showToast('Please fill in CPT code and payer name'); return; }
+
+  const genEl = document.getElementById('generating');
+  genEl.classList.add('show');
+
+  const ms = 1800 + Math.random() * 900;
+  setTimeout(() => {
+    genEl.classList.remove('show');
+    const title = `${cpt} · ${payer}`;
+    const newLetter = { id: APPEAL_LETTERS.length+1, paId: paId ? parseInt(paId) : 99, title, words: Math.floor(500+Math.random()*160), date: new Date().toLocaleDateString('en-US'), status:'ready' };
+    APPEAL_LETTERS.unshift(newLetter);
+    renderAppealList();
+    showToast('Appeal letter generated — ' + newLetter.words + ' words');
+
+    if (paId) {
+      setTimeout(() => viewLetter(parseInt(paId), title), 300);
+    }
+  }, ms);
+}
+
+function copyLetter() {
+  const text = document.getElementById('modalBody').innerText;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
+}
+
+function downloadPDF() {
+  const title = document.getElementById('modalTitle').textContent;
+  const content = document.getElementById('modalBody').innerHTML;
+  const win = window.open('','_blank');
+  win.document.write(`<html><head><title>${title}</title><style>
+    body{font-family:Georgia,serif;max-width:750px;margin:40px auto;font-size:14px;line-height:1.7;color:#1a1a2e}
+    h1,h2,h3{font-weight:700;margin-top:1.5em}
+    table{width:100%;border-collapse:collapse;margin:1em 0}
+    td,th{border:1px solid #ddd;padding:8px 12px}
+    th{background:#f5f5f5}
+    hr{border:none;border-top:1px solid #ddd;margin:1.5em 0}
+    blockquote{border-left:3px solid #ddd;padding-left:1em;font-style:italic;color:#666}
+    .letter-meta{background:#f9f9f9;padding:12px;margin-bottom:20px;display:flex;gap:24px;flex-wrap:wrap}
+    @media print{body{margin:20px}}
+  </style></head><body>${content}</body></html>`);
+  win.document.close();
+  setTimeout(() => { win.print(); }, 400);
+  showToast('Opening print dialog');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Close modal on overlay click / ESC
+document.getElementById('letterModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('letterModal')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── INIT ──────────────────────────────────────────────────────────
+renderTable();
+renderAppealList();
+populatePASelect();
+</script>
+</body>
+</html>
