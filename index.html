@@ -3,118 +3,303 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sanctr — AI-Assisted Appeal Letters for Orthopedic Practices</title>
+<title>Sanctr — Prior Auth Appeals, Automated</title>
+<meta name="description" content="AI-assisted appeal letters for orthopedic practices. Generated in under 3 seconds.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #0e0d0c; --bg2: #161412; --bg3: #1e1c1a;
-    --green: #1a9b84; --green-dark: #1a6b5a;
-    --text: #f5f2ee; --text-muted: #8a8078; --text-dim: #3a3530;
-    --amber: #d4a030; --border: #2a2520;
-  }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; min-height: 100vh; overflow-x: hidden; }
-  .topbar { display: flex; align-items: center; justify-content:pace-between; padding: 20px 48px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 100; }
-  .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.4em; color: var(--green); text-transform: uppercase; text-decoration: none; }
-  .nav-cta { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bg); background: var(--green); border: none; padding: 10px 24px; cursor: pointer; text-decoration: none; transition: background 0.2s; }
-  .nav-cta:hover { background: #22c4a8; }
-  .hero { padding: 100px 48px 80px; max-width: 1100px; margin: 0 auto; }
-  .hero-eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 32px; }
-  .hero-title { font-family: 'DM Serif Display', serif; font-size: clamp(52px, 8vw, 96px); line-height: 1.0; letter-spacing: -2px; color: var(--text); margin-bottom: 16px; }
-  .hero-title em { font-style: italic; color: var(--green); }
-  .hero-sub { font-family: 'DM Serif Display', serif; font-size: clamp(18px, 2.5vw, 24px); color: var(--text-muted); font-style: italic; margin-bottom: 64px; max-width: 600px; line-height: 1.5; }
-  .stats { display: flex; gap: 0; border: 1px solid var(--border); margin-bottom: 80px; }
-  .stat { flex: 1; padding: 32px 36px; border-right: 1px solid var(--border); }
-  .stat:last-child { border-right: none; }
-  .stat-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 12px; }
-  .stat-value { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--text); line-height: 1; }
-  .stat-value.green { color: var(--green); }
-  .stat-value.amber { color: var(--amber); }
-  .divider { border: none; border-top: 1px solid var(--border); margin: 0 48px; }
-  .section { padding: 80px 48px; max-width: 1100px; margin: 0 auto; }
-  .section-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--green); text-transform: uppercase; margin-bottom: 48px; }
-  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 80px; }
-  .step { background: var(--bg); padding: 40px 36px; }
-  .step-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--green); letter-spacing: 0.1em; margin-bottom: 20px; }
-  .step-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--text); margin-bottom: 12px; line-height: 1.2; }
-  .step-desc { font-family: 'Syne', sans-serif; font-size: 14px; color: var(--text-muted); line-height: 1.7; font-weight: 400; }
-  .for-whom { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); }
-  .for-card { background: var(--bg2); padding: 40px 36px; }
-  .for-role { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--green); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 16px; }
-  .for-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--text); margin-bottom: 12px; }
-  .for-desc { font-family: 'Syne', sans-serif; font-size: 14px; color: var(--text-muted); line-height: 1.7; font-weight: 400; }
-  .form-section { padding: 80px 48px; background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .form-inner { max-width: 600px; margin: 0 auto; }
-  .form-eyebrow { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: var(--green); text-transform: uppercase; margin-bottom: 24px; }
-  .form-title { font-family: 'DM Serif Display', serif; font-size: 42px; color: var(--text); line-height: 1.1; margin-bottom: 12px; letter-spacing: -1px; }
-  .form-sub { font-family: 'Syne', sans-serif; font-size: 15px; color: var(--text-muted); margin-bottom: 48px; line-height: 1.6; font-weight: 400; }
-  .form-group { margin-bottom: 16px; }
-  .form-label { display: block; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.15em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
-  .form-input { width: 100%; background: var(--bg3); border: 1px solid var(--border); color: var(--text); font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 400; padding: 14px 18px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; border-radius: 0; }
-  .form-input:focus { border-color: var(--green); }
-  .form-input::placeholder { color: var(--text-dim); }
-  .form-submit { width: 100%; background: var(--green); color: var(--bg); border: none; font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; padding: 18px; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
-  .form-submit:hover { background: #22c4a8; }
-  .form-note { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); margin-top: 16px; text-align: center; letter-spacing: 0.05em; }
-  .success-msg { display: none; text-align: center; padding: 48px 0; }
-  .success-msg.visible { display: block; }
-  .success-title { font-family: 'DM Serif Display', serif; font-size: 32px; color: var(--green); margin-bottom: 12px; }
-  .success-sub { font-family: 'Syne', sans-serif; font-size: 15px; color: var(--text-muted); font-weight: 400; }
-  .footer { padding: 32px 48px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--border); }
-  .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 11px; letter-spacing: 0.4em; color: var(--green-dark); text-transform: uppercase; }
-  .footer-text { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-dim); letter-spacing: 0.05em; }
-  @media (max-width: 768px) {
-    .topbar { padding: 16px 24px; }
-    .hero { padding: 60px 24px 48px; }
-    .stats { flex-direction: column; }
-    .stat { border-right: none; border-bottom: 1px solid var(--border); }
-    .steps { grid-template-columns: 1fr; }
-    .for-whom { grid-template-columns: 1fr; }
-    .section { padding: 48px 24px; }
-    .form-section { padding: 48px 24px; }
-    .footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
-  }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0908;--bg2:#111010;--bg3:#191716;--bg4:#211f1d;--green:#1daa90;--green-dk:#145f50;--green-lt:#25d4b0;--text:#f0ede8;--muted:#7a7268;--dim:#333028;--amber:#d4a030;--border:#242120;--border2:#1a1918}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;min-height:100vh;overflow-x:hidden;cursor:none}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5}
+.cursor{position:fixed;width:8px;height:8px;background:var(--green);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s}
+.cursor-ring{position:fixed;width:32px;height:32px;border:1px solid var(--green-dk);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s;opacity:.6}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 52px;border-bottom:1px solid var(--border);position:sticky;top:0;background:rgba(10,9,8,.94);backdrop-filter:blur(12px);z-index:100}
+.logo{font-weight:800;font-size:12px;letter-spacing:.45em;color:var(--green);text-transform:uppercase;text-decoration:none}
+.nav-right{display:flex;align-items:center;gap:32px}
+.nav-link{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color .2s}
+.nav-link:hover{color:var(--text)}
+.nav-cta{font-weight:700;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--bg);background:var(--green);border:none;padding:10px 22px;cursor:none;text-decoration:none;transition:background .2s}
+.nav-cta:hover{background:var(--green-lt)}
+.hero{position:relative;padding:120px 52px 100px;max-width:1140px;margin:0 auto;overflow:hidden}
+.hero-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(var(--border2) 1px,transparent 1px),linear-gradient(90deg,var(--border2) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 20%,transparent 100%);opacity:.5}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:.25em;text-transform:uppercase;margin-bottom:36px;opacity:0;animation:fadeUp .7s ease forwards .1s}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(56px,9vw,108px);line-height:.95;letter-spacing:-3px;color:var(--text);margin-bottom:12px;opacity:0;animation:fadeUp .7s ease forwards .2s}
+.hero-title em{font-style:italic;color:var(--green)}
+.hero-sub{font-family:'DM Serif Display',serif;font-size:clamp(17px,2vw,22px);color:var(--muted);font-style:italic;max-width:560px;line-height:1.55;margin-bottom:56px;opacity:0;animation:fadeUp .7s ease forwards .3s}
+.hero-actions{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:80px;opacity:0;animation:fadeUp .7s ease forwards .4s}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--green);color:var(--bg);font-family:'Syne',sans-serif;font-weight:700;font-size:11px;letter-spacing:.2em;text-transform:uppercase;padding:14px 28px;text-decoration:none;border:none;cursor:none;transition:background .2s,transform .15s}
+.btn-primary:hover{background:var(--green-lt);transform:translateY(-1px)}
+.btn-arrow{font-size:14px;transition:transform .2s}
+.btn-primary:hover .btn-arrow{transform:translateX(3px)}
+.btn-secondary{display:inline-flex;align-items:center;gap:8px;color:var(--muted);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;transition:color .2s;cursor:none;border-bottom:1px solid var(--border);padding-bottom:2px}
+.btn-secondary:hover{color:var(--text);border-color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);opacity:0;animation:fadeUp .7s ease forwards .5s}
+.stat{padding:28px 32px;border-right:1px solid var(--border);transition:background .2s}
+.stat:last-child{border-right:none}
+.stat:hover{background:var(--bg2)}
+.stat-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;margin-bottom:10px}
+.stat-value{font-family:'DM Serif Display',serif;font-size:28px;color:var(--text);line-height:1}
+.stat-value.g{color:var(--green)}
+.stat-value.a{color:var(--amber)}
+.why-now{border-top:1px solid var(--border);padding:48px 52px;background:var(--bg2)}
+.why-inner{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:200px 1fr;gap:40px;align-items:start}
+.why-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;color:var(--amber);text-transform:uppercase;padding-top:4px}
+.why-text{font-family:'Syne',sans-serif;font-size:14px;color:var(--muted);line-height:1.75;font-weight:400}
+.why-text strong{color:var(--text);font-weight:600}
+.section{padding:88px 52px;max-width:1140px;margin:0 auto}
+.section-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.25em;color:var(--green);text-transform:uppercase;margin-bottom:52px}
+.section-title{font-family:'DM Serif Display',serif;font-size:clamp(28px,4vw,42px);color:var(--text);margin-bottom:52px;line-height:1.15}
+hr.divider{border:none;border-top:1px solid var(--border);margin:0 52px}
+.problem-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.pstat{background:var(--bg);padding:40px 36px;position:relative;overflow:hidden;transition:background .25s}
+.pstat::before{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:var(--green-dk);transition:background .25s}
+.pstat:hover{background:var(--bg2)}
+.pstat:hover::before{background:var(--green)}
+.pstat-num{font-family:'DM Serif Display',serif;font-size:52px;color:var(--amber);line-height:1;margin-bottom:8px}
+.pstat-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:600;color:var(--text);margin-bottom:10px}
+.pstat-sub{font-family:'Syne',sans-serif;font-size:12px;color:var(--muted);line-height:1.65;font-weight:400}
+.pstat-cite{font-family:'DM Mono',monospace;font-size:8px;color:var(--dim);margin-top:16px;letter-spacing:.05em}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.step{background:var(--bg);padding:44px 36px;transition:background .2s}
+.step:hover{background:var(--bg2)}
+.step-num{font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:.1em;margin-bottom:24px}
+.step-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:14px;line-height:1.2}
+.step-line{width:40px;height:1px;background:var(--border);margin-bottom:18px;transition:width .3s,background .3s}
+.step:hover .step-line{width:70px;background:var(--green-dk)}
+.step-desc{font-family:'Syne',sans-serif;font-size:13px;color:var(--muted);line-height:1.75;font-weight:400}
+.for-whom{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)}
+.for-card{background:var(--bg2);padding:44px 40px;transition:background .2s}
+.for-card:hover{background:var(--bg3)}
+.for-role{font-family:'DM Mono',monospace;font-size:9px;color:var(--green);letter-spacing:.18em;text-transform:uppercase;margin-bottom:18px}
+.for-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text);margin-bottom:14px}
+.for-desc{font-family:'Syne',sans-serif;font-size:13px;color:var(--muted);line-height:1.75;font-weight:400}
+.demo-section{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2);padding:72px 52px}
+.demo-inner{max-width:1140px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.demo-text h2{font-family:'DM Serif Display',serif;font-size:clamp(28px,3.5vw,44px);color:var(--text);line-height:1.1;margin-bottom:20px}
+.demo-text p{font-family:'Syne',sans-serif;font-size:14px;color:var(--muted);line-height:1.75;font-weight:400;margin-bottom:32px}
+.demo-preview{background:var(--bg3);border:1px solid var(--border);padding:28px;position:relative;overflow:hidden}
+.demo-preview::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--green-dk),var(--green),var(--green-dk))}
+.demo-preview-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--green);letter-spacing:.2em;text-transform:uppercase;margin-bottom:20px}
+.demo-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border2)}
+.demo-row:last-of-type{border-bottom:none}
+.demo-key{font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+.demo-val{font-family:'Syne',sans-serif;font-size:12px;color:var(--text);font-weight:600}
+.demo-val.denied{color:#c84a4a}
+.demo-val.gen{color:var(--green)}
+.demo-timer{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:24px;padding:16px;background:var(--bg4);border:1px solid var(--border)}
+.demo-timer-num{font-family:'DM Serif Display',serif;font-size:36px;color:var(--green);line-height:1}
+.demo-timer-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.form-section{padding:88px 52px}
+.form-inner{max-width:580px;margin:0 auto}
+.form-eyebrow{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.25em;color:var(--green);text-transform:uppercase;margin-bottom:20px}
+.form-title{font-family:'DM Serif Display',serif;font-size:clamp(32px,4vw,48px);color:var(--text);line-height:1.05;margin-bottom:12px;letter-spacing:-1px}
+.form-sub{font-family:'Syne',sans-serif;font-size:14px;color:var(--muted);margin-bottom:44px;line-height:1.7;font-weight:400}
+.urgency{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--bg2);border:1px solid var(--border);border-left:3px solid var(--amber);margin-bottom:32px}
+.urgency-dot{width:6px;height:6px;background:var(--amber);border-radius:50%;flex-shrink:0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.urgency-text{font-family:'DM Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:.05em}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase;margin-bottom:8px}
+.form-input{width:100%;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;font-weight:400;padding:13px 16px;outline:none;transition:border-color .2s,background .2s;border-radius:0;-webkit-appearance:none}
+.form-input:focus{border-color:var(--green);background:var(--bg3)}
+.form-input::placeholder{color:var(--dim)}
+.form-submit{width:100%;background:var(--green);color:var(--bg);border:none;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:17px;cursor:none;margin-top:8px;transition:background .2s}
+.form-submit:hover{background:var(--green-lt)}
+.form-note{font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);margin-top:14px;text-align:center;letter-spacing:.05em}
+.success-msg{display:none;text-align:center;padding:56px 0}
+.success-msg.visible{display:block}
+.success-title{font-family:'DM Serif Display',serif;font-size:36px;color:var(--green);margin-bottom:12px}
+.success-sub{font-family:'Syne',sans-serif;font-size:14px;color:var(--muted);font-weight:400}
+.footer{padding:28px 52px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-logo{font-weight:800;font-size:10px;letter-spacing:.45em;color:var(--green-dk);text-transform:uppercase}
+.footer-links{display:flex;align-items:center;gap:24px}
+.footer-link{font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.08em;text-decoration:none;transition:color .2s;cursor:none;background:none;border:none;padding:0}
+.footer-link:hover{color:var(--muted)}
+.footer-text{font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.05em}
+.modal-overlay{position:fixed;inset:0;background:rgba(10,9,8,.92);z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;backdrop-filter:blur(8px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--border);max-width:680px;width:100%;max-height:80vh;overflow-y:auto;position:relative}
+.modal-header{padding:28px 32px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg2);z-index:1}
+.modal-title{font-family:'DM Mono',monospace;font-size:10px;color:var(--green);letter-spacing:.2em;text-transform:uppercase}
+.modal-close{background:none;border:none;color:var(--muted);font-size:18px;cursor:none;transition:color .2s;line-height:1;font-family:'DM Mono',monospace}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:32px}
+.modal-body h3{font-family:'DM Serif Display',serif;font-size:16px;color:var(--text);margin:24px 0 10px;line-height:1.3}
+.modal-body h3:first-child{margin-top:0}
+.modal-body p{font-family:'Syne',sans-serif;font-size:13px;color:var(--muted);line-height:1.75;font-weight:400;margin-bottom:12px}
+.modal-body ul{padding-left:20px;margin-bottom:12px}
+.modal-body li{font-family:'Syne',sans-serif;font-size:13px;color:var(--muted);line-height:1.75;font-weight:400;margin-bottom:6px}
+.modal-date{font-family:'DM Mono',monospace;font-size:9px;color:var(--dim);margin-bottom:24px;letter-spacing:.08em}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:900px){
+  .topbar,.hero,.section,.form-section,.footer{padding-left:24px;padding-right:24px}
+  hr.divider{margin:0 24px}
+  .why-now{padding:36px 24px}
+  .why-inner{grid-template-columns:1fr;gap:12px}
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{border-bottom:1px solid var(--border)}
+  .problem-stats,.steps,.for-whom{grid-template-columns:1fr}
+  .demo-inner{grid-template-columns:1fr;gap:40px}
+  .demo-section{padding:56px 24px}
+  body{cursor:auto}
+  .cursor,.cursor-ring{display:none}
+}
 </style>
 </head>
 <body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Privacy Modal -->
+<div class="modal-overlay" id="privacyModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Privacy Policy</span>
+      <button class="modal-close" onclick="closePrivacy()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-date">Effective date: April 2026</p>
+      <h3>What we collect</h3>
+      <p>When you submit the early access form, we collect your name, work email address, and practice name. We do not collect any patient data, clinical information, or protected health information (PHI) through this website.</p>
+      <h3>How we use it</h3>
+      <ul>
+        <li>To contact you about your early access request</li>
+        <li>To schedule a demo call</li>
+        <li>To send relevant product updates (you can unsubscribe at any time)</li>
+      </ul>
+      <h3>Who we share it with</h3>
+      <p>We use Formspree to process form submissions. Your data is transmitted securely and is not sold to third parties. We do not share your information with advertisers or data brokers.</p>
+      <h3>PHI and HIPAA</h3>
+      <p>The Sanctr application (app.sanctr.com) is hosted on HIPAA-eligible AWS infrastructure. This landing page (sanctr.com) does not process, store, or transmit any protected health information. Any patient data used within the Sanctr application is governed by a separate Business Associate Agreement.</p>
+      <h3>Data retention</h3>
+      <p>Form submissions are retained for up to 12 months or until you request deletion. To request deletion of your data, email james@sanctr.com with subject line "Data deletion request."</p>
+      <h3>Cookies</h3>
+      <p>This website does not use tracking cookies or analytics scripts. No third-party advertising pixels are present.</p>
+      <h3>Contact</h3>
+      <p>Questions about this policy: james@sanctr.com</p>
+    </div>
+  </div>
+</div>
+
 <nav class="topbar">
   <a href="#" class="logo">Sanctr</a>
-  <a href="#early-access" class="nav-cta">Request access</a>
+  <div class="nav-right">
+    <a href="https://app.sanctr.com/dashboard" class="nav-link" target="_blank">See it live →</a>
+    <a href="#early-access" class="nav-cta">Request access</a>
+  </div>
 </nav>
+
 <section class="hero">
-  <p class="hero-eyebrow">For orthopedic practices · Early access</p>
+  <div class="hero-grid"></div>
+  <p class="hero-eyebrow">For orthopedic practices · Early access 2026</p>
   <h1 class="hero-title">Prior auth appeals.<br><em>Automated.</em></h1>
   <p class="hero-sub">AI-assisted appeal letters for practice managers and billing teams who deal with payer denials every day.</p>
+  <div class="hero-actions">
+    <a href="https://app.sanctr.com/dashboard" class="btn-primary" target="_blank">See it in action <span class="btn-arrow">→</span></a>
+    <a href="#early-access" class="btn-secondary">Request early access</a>
+  </div>
   <div class="stats">
-    <div class="stat"><div class="stat-label">Letter generation</div><div class="stat-value green">&lt; 3 sec</div></div>
+    <div class="stat"><div class="stat-label">Letter generation</div><div class="stat-value g">&lt; 3 sec</div></div>
     <div class="stat"><div class="stat-label">Built for</div><div class="stat-value">Orthopedics</div></div>
-    <div class="stat"><div class="stat-label">Status</div><div class="stat-value amber">Early access</div></div>
+    <div class="stat"><div class="stat-label">Status</div><div class="stat-value a">Early access</div></div>
     <div class="stat"><div class="stat-label">Infrastructure</div><div class="stat-value">HIPAA-eligible</div></div>
   </div>
 </section>
-<hr class="divider">
-<section class="sectio">
-  <p class="section-label">How it works</p>
-  <div class="steps">
-    <div class="step"><div class="step-num">01</div><div class="step-title">Denial comes in</div><div class="step-desc">Enter the denial reason, CPT code, diagnosis, and payer. Takes less than a minute.</div></div>
-    <div class="step"><div class="step-num">02</div><div class="step-title">Letter generates</div><div class="step-desc">AI writes a complete, clinically grounded appeal letter in under 3 seconds — formatted and ready to send.</div></div>
-    <div class="step"><div class="step-num">03</div><div class="step-title">Edit, download, send</div><div class="step-desc">Review the letter, make any edits, download as PDF, and attach to your fax or email. Done.</div></div>
+
+<div class="why-now">
+  <div class="why-inner">
+    <div class="why-label">Why now</div>
+    <div class="why-text"><strong>CMS finalized its Prior Authorization Reform Rule in 2025.</strong> Payers must now disclose denial rates publicly for the first time. Medicare Advantage PA denials for orthopedic procedures rose to <strong>7.4% in 2025</strong> — up from 5.9% in 2023. The pressure on practices is accelerating.</div>
   </div>
+</div>
+
+<hr class="divider">
+
+<section class="section reveal">
+  <p class="section-label">The problem</p>
+  <p class="section-title">Denied claims are revenue your team already earned.</p>
+  <div class="problem-stats">
+    <div class="pstat">
+      <div class="pstat-num">$700K+</div>
+      <div class="pstat-label">In delayed or written-off revenue per year</div>
+      <div class="pstat-sub">For a typical multi-surgeon orthopedic group operating at a 14% denial rate.</div>
+      <div class="pstat-cite">AHA 2024 · Medical Billers & Coders 2026</div>
+    </div>
+    <div class="pstat">
+      <div class="pstat-num">7.4%</div>
+      <div class="pstat-label">Medicare Advantage PA denial rate for orthopedics</div>
+      <div class="pstat-sub">Up 25% in two years. TKA, spinal fusion, arthroscopy face the most scrutiny.</div>
+      <div class="pstat-cite">AHA 2024 Annual Survey</div>
+    </div>
+    <div class="pstat">
+      <div class="pstat-num">19.5 min</div>
+      <div class="pstat-label">Average admin time per PA request</div>
+      <div class="pstat-sub">Across 1,065 orthopedic PA requests in a peer-reviewed multicenter study.</div>
+      <div class="pstat-cite">Jarrett et al., JSES 2024</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section reveal">
+  <p class="section-label">How it works</p>
+  <p class="section-title">Three steps. No training required.</p>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div class="step-title">Denial comes in</div><div class="step-line"></div><div class="step-desc">Enter the denial reason, CPT code, diagnosis, and payer. Takes less than a minute.</div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-title">Letter generates</div><div class="step-line"></div><div class="step-desc">AI writes a complete, clinically grounded appeal letter in under 3 seconds — formatted and ready to send.</div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-title">Edit, download, send</div><div class="step-line"></div><div class="step-desc">Review the letter, make any edits, download as PDF, and attach to your fax or email. Done.</div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="section reveal">
   <p class="section-label">Built for</p>
   <div class="for-whom">
-    <div class="for-card"><div class="for-role">Practice managers</div><diclass="for-title">Stop writing the same letter twice.</div><div class="for-desc">Every denied TKA, rotator cuff repair, or arthroscopy follows the same pattern. Sanctr generates the appeal so your team doesn't have to.</div></div>
+    <div class="for-card"><div class="for-role">Practice managers</div><div class="for-title">Stop writing the same letter twice.</div><div class="for-desc">Every denied TKA, rotator cuff repair, or arthroscopy follows the same pattern. Sanctr generates the appeal so your team doesn't have to.</div></div>
     <div class="for-card"><div class="for-role">Billing &amp; revenue cycle</div><div class="for-title">Fewer denials sitting on your desk.</div><div class="for-desc">Track denied authorizations, generate appeals in seconds, and keep your revenue cycle moving without chasing physicians for documentation.</div></div>
   </div>
 </section>
-<section class="form-section" id="early-access">
+
+<div class="demo-section reveal">
+  <div class="demo-inner">
+    <div class="demo-text">
+      <p class="section-label" style="margin-bottom:20px;">See it in action</p>
+      <h2>A real appeal letter. In under 3 seconds.</h2>
+      <p>The live dashboard is running now on HIPAA-eligible AWS infrastructure. Real Epic FHIR integration. Real payer decisions. Real appeal letters — formatted, editable, and ready to send.</p>
+      <a href="https://app.sanctr.com/dashboard" class="btn-primary" target="_blank" style="display:inline-flex;">Open live dashboard <span class="btn-arrow">→</span></a>
+    </div>
+    <div class="demo-preview">
+      <div class="demo-preview-label">Prior Auth Request · CPT 27447</div>
+      <div class="demo-row"><span class="demo-key">Patient</span><span class="demo-val">Camila M. · DOB 1987</span></div>
+      <div class="demo-row"><span class="demo-key">Procedure</span><span class="demo-val">Total Knee Arthroplasty</span></div>
+      <div class="demo-row"><span class="demo-key">Payer</span><span class="demo-val">UnitedHealthcare</span></div>
+      <div class="demo-row"><span class="demo-key">Decision</span><span class="demo-val denied">Denied — not medically necessary</span></div>
+      <div class="demo-timer">
+        <div class="demo-timer-num">&lt; 3</div>
+        <div class="demo-timer-label">seconds to<br>appeal letter</div>
+        <div class="demo-val gen" style="font-size:11px;margin-left:auto;">557 words<br>generated ✓</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="form-section reveal" id="early-access">
   <div class="form-inner">
     <p class="form-eyebrow">Early access</p>
     <h2 class="form-title">Request a demo.</h2>
-    <p class="form-sub">We're working with a small group of orthopedic practices to pilot Sanctr. If your team deals with prior auth denials — we'd love 20 minutes.</p>
+    <p class="form-sub">We're piloting with 5 orthopedic practices — free, no commitment. If your team deals with prior auth denials, we'd love 20 minutes.</p>
+    <div class="urgency">
+      <div class="urgency-dot"></div>
+      <span class="urgency-text">3 of 5 pilot spots remaining · Applications close April 30, 2026</span>
+    </div>
     <form id="accessForm">
-      <div class="form-group"><label class="form-label" for="name">Your name</label><iut class="form-input" type="text" id="name" name="name" placeholder="Jane Smith" required></div>
+      <div class="form-group"><label class="form-label" for="name">Your name</label><input class="form-input" type="text" id="name" name="name" placeholder="Jane Smith" required></div>
       <div class="form-group"><label class="form-label" for="email">Work email</label><input class="form-input" type="email" id="email" name="email" placeholder="jane@orthopractice.com" required></div>
       <div class="form-group"><label class="form-label" for="practice">Practice name</label><input class="form-input" type="text" id="practice" name="practice" placeholder="Frederick Orthopedic Associates" required></div>
       <button class="form-submit" type="submit">Request early access →</button>
@@ -126,24 +311,38 @@
     </div>
   </div>
 </section>
+
 <footer class="footer">
   <span class="footer-logo">Sanctr</span>
-  <span css="footer-text">HIPAA-eligible infrastructure · Early access 2026</span>
+  <div class="footer-links">
+    <a href="https://app.sanctr.com/dashboard" class="footer-link" target="_blank">Live dashboard</a>
+    <button class="footer-link" onclick="openPrivacy()">Privacy policy</button>
+    <a href="mailto:james@sanctr.com" class="footer-link">james@sanctr.com</a>
+  </div>
+  <span class="footer-text">HIPAA-eligible infrastructure · Early access 2026</span>
 </footer>
+
 <script>
-document.getElementById('accessForm').addEventListener('submit', function(e) {
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+(function anim(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(anim)})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.width='14px';cursor.style.height='14px';ring.style.width='44px';ring.style.height='44px';ring.style.borderColor='var(--green)'});
+  el.addEventListener('mouseleave',()=>{cursor.style.width='8px';cursor.style.height='8px';ring.style.width='32px';ring.style.height='32px';ring.style.borderColor='var(--green-dk)'});
+});
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+function openPrivacy(){document.getElementById('privacyModal').classList.add('open');document.body.style.overflow='hidden'}
+function closePrivacy(){document.getElementById('privacyModal').classList.remove('open');document.body.style.overflow=''}
+document.getElementById('privacyModal').addEventListener('click',e=>{if(e.target===document.getElementById('privacyModal'))closePrivacy()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePrivacy()});
+document.getElementById('accessForm').addEventListener('submit',function(e){
   e.preventDefault();
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const practice = document.getElementById('practice').value;
-  fetch('https://formspree.io/f/mwvwjvyk', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify({ name, email, practice })
-  }).finally(() => {
-    document.getElementById('accessForm').style.display = 'none';
-    document.getElementById('successMsg').classList.add('visible');
-  });
+  const btn=this.querySelector('.form-submit');
+  btn.textContent='Sending...';btn.disabled=true;
+  fetch('https://formspree.io/f/mwvwjvyk',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({name:document.getElementById('name').value,email:document.getElementById('email').value,practice:document.getElementById('practice').value})})
+  .finally(()=>{document.getElementById('accessForm').style.display='none';document.getElementById('successMsg').classList.add('visible')});
 });
 </script>
 </body>
